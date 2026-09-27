@@ -23,5 +23,5 @@ Durante a análise, consegui identificar alguns dados interessantes:
 - Estado com maior faturamento: São Paulo (SP)
 - Vendedor com maior faturamento: 4869f7a5dfa277a7dca6462dcf3b52b2, com R$ 229.472,63 em vendas
 - Forma de pagamento mais utilizada: cartão de crédito, com 76.795 pagamentos
-- Categoria com menor nota média: fashion_roupa_masculina, com nota 3,57 e 61 avaliações
+- Categoria com menor nota média: moveis_escritorio, com nota 3,62 e 1.266 avaliações
 - Prazo de entrega: cerca de 92% dos pedidos chegaram antes do prazo, 7% chegaram atrasados e 1% foram entregues na data estimada
