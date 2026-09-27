@@ -16,11 +16,10 @@ DROP VIEW IF EXISTS vw_avaliacoes_categoria;
 CREATE VIEW vw_avaliacoes_categoria AS
 SELECT categoria, AVG(review_score::numeric) AS nota_media, COUNT(*) AS qtd_avaliacoes
 FROM (
-    SELECT DISTINCT p.product_category_name AS categoria, r.order_id, r.review_score
-    FROM public.olist_order_items_dataset oi
-    JOIN public.olist_products_dataset p ON oi.product_id = p.product_id
-    JOIN public.olist_order_reviews_dataset r ON oi.order_id = r.order_id
-) sub
+SELECT DISTINCT p.product_category_name AS categoria, r.order_id, r.review_score
+FROM public.olist_order_items_dataset oi
+JOIN public.olist_products_dataset p ON oi.product_id = p.product_id
+JOIN public.olist_order_reviews_dataset r ON oi.order_id = r.order_id) sub
 GROUP BY categoria;
 
 
