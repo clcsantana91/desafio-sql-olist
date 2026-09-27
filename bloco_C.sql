@@ -41,14 +41,24 @@ ORDER BY ticket_medio DESC;
 
 -- 4. Vendedores com nota média de avaliação abaixo de 3.
 -- Pergunta de negócio: quais vendedores possuem média de avaliação inferior a 3?
+
+-- Passo 1: pega cada combinação única de vendedor + pedido + nota
+-- (isso evita contar a mesma nota mais de uma vez quando o pedido tem vários itens)
+-- Passo 2: calcula a média por vendedor em cima dessa lista já sem repetição
 SELECT 
-    oi.seller_id,
-    AVG(r.review_score::numeric) AS nota_media
-FROM public.olist_order_items_dataset oi
-JOIN public.olist_order_reviews_dataset r 
-    ON oi.order_id = r.order_id
-GROUP BY oi.seller_id
-HAVING AVG(r.review_score::numeric) < 3
+    vendedor_nota.seller_id,
+    AVG(vendedor_nota.review_score::numeric) AS nota_media
+FROM (
+    SELECT DISTINCT
+        oi.seller_id,
+        oi.order_id,
+        r.review_score
+    FROM public.olist_order_items_dataset oi
+    JOIN public.olist_order_reviews_dataset r 
+        ON oi.order_id = r.order_id
+) AS vendedor_nota
+GROUP BY vendedor_nota.seller_id
+HAVING AVG(vendedor_nota.review_score::numeric) < 3
 ORDER BY nota_media;
 
 
@@ -74,13 +84,30 @@ ORDER BY peso_medio DESC;
 
 -- 7. Número médio de parcelas por categoria de produto.
 -- Pergunta de negócio: qual é a média de parcelas utilizadas nas compras de cada categoria?
+
+-- Passo 1: soma as parcelas de cada pedido (um pedido pode ter mais de uma forma
+-- de pagamento, então somamos tudo para saber o total de parcelas daquele pedido)
+-- Passo 2: junta essa informação com produtos, pegando cada pedido só uma vez por categoria
+-- Passo 3: calcula a média de parcelas por categoria
 SELECT 
-    p.product_category_name AS categoria,
-    AVG(op.payment_installments::numeric) AS media_parcelas
-FROM public.olist_order_items_dataset oi
-JOIN public.olist_products_dataset p 
-    ON oi.product_id = p.product_id
-JOIN public.olist_order_payments_dataset op 
-    ON oi.order_id = op.order_id
-GROUP BY p.product_category_name
+    pedido_categoria.categoria,
+    AVG(pedido_categoria.parcelas::numeric) AS media_parcelas
+FROM (
+    SELECT DISTINCT
+        p.product_category_name AS categoria,
+        oi.order_id,
+        parcelas_por_pedido.parcelas
+    FROM public.olist_order_items_dataset oi
+    JOIN public.olist_products_dataset p 
+        ON oi.product_id = p.product_id
+    JOIN (
+        SELECT 
+            order_id,
+            SUM(payment_installments::numeric) AS parcelas
+        FROM public.olist_order_payments_dataset
+        GROUP BY order_id
+    ) AS parcelas_por_pedido
+        ON oi.order_id = parcelas_por_pedido.order_id
+) AS pedido_categoria
+GROUP BY pedido_categoria.categoria
 ORDER BY media_parcelas DESC;
