@@ -53,6 +53,7 @@ ORDER BY peso_medio DESC;
 
 
 -- passo 1: soma as parcelas de cada pedido
+DROP TABLE IF EXISTS parcelas_pedido;
 CREATE TEMP TABLE parcelas_pedido AS
 SELECT order_id, SUM(payment_installments::numeric) AS parcelas
 FROM public.olist_order_payments_dataset
@@ -60,6 +61,7 @@ GROUP BY order_id;
 
 -- passo 2: pega cada combinação única de pedido + categoria
 -- (evita repetir quando o pedido tem mais de um item da mesma categoria)
+DROP TABLE IF EXISTS pedido_categoria;
 CREATE TEMP TABLE pedido_categoria AS
 SELECT DISTINCT oi.order_id, p.product_category_name AS categoria
 FROM public.olist_order_items_dataset oi
