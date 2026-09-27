@@ -4,7 +4,7 @@
 SELECT order_id, customer_id, order_status, order_delivered_customer_date
 FROM public.olist_orders_dataset
 WHERE order_status = 'delivered'
-    AND NULLIF(order_delivered_customer_date, '') IS NOT NULL
+AND NULLIF(order_delivered_customer_date, '') IS NOT NULL
 ORDER BY order_delivered_customer_date::timestamp DESC
 LIMIT 20;
  
