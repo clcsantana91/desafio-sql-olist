@@ -1,6 +1,7 @@
 -- BLOCO D - Subqueries
 
 -- passo 1: soma o total gasto (preço + frete) de cada cliente
+DROP TABLE IF EXISTS gasto_cliente;
 CREATE TEMP TABLE gasto_cliente AS
 SELECT c.customer_id, SUM(oi.price::numeric + oi.freight_value::numeric) AS gasto_total
 FROM public.olist_customers_dataset c
@@ -30,7 +31,8 @@ SELECT sub.seller_id, COUNT(sub.categoria) AS qtd_categorias
 FROM (
     SELECT DISTINCT oi.seller_id, p.product_category_name AS categoria
     FROM public.olist_order_items_dataset oi
-    JOIN public.olist_products_dataset p ON oi.product_id = p.product_id) sub
+    JOIN public.olist_products_dataset p ON oi.product_id = p.product_id
+) sub
 GROUP BY sub.seller_id
 HAVING COUNT(sub.categoria) > 5
 ORDER BY qtd_categorias DESC;
@@ -41,6 +43,7 @@ SELECT sub.order_id, sub.valor_itens, sub.valor_frete
 FROM (
     SELECT oi.order_id, SUM(oi.price::numeric) AS valor_itens, SUM(oi.freight_value::numeric) AS valor_frete
     FROM public.olist_order_items_dataset oi
-    GROUP BY oi.order_id) sub
+    GROUP BY oi.order_id
+) sub
 WHERE sub.valor_frete > sub.valor_itens
 ORDER BY sub.valor_frete DESC;
