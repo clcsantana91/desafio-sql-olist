@@ -11,8 +11,8 @@ JOIN public.olist_sellers_dataset s ON oi.seller_id = s.seller_id;
 SELECT order_id, order_estimated_delivery_date, order_delivered_customer_date
 FROM public.olist_orders_dataset
 WHERE order_delivered_customer_date <> ''
-    AND order_estimated_delivery_date <> ''
-    AND order_delivered_customer_date::date > order_estimated_delivery_date::date;
+AND order_estimated_delivery_date <> ''
+AND order_delivered_customer_date::date > order_estimated_delivery_date::date;
  
  
 -- 3. Pedidos pagos em mais de uma parcela
