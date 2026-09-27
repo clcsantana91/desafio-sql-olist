@@ -1,3 +1,5 @@
+# Desafio SQL - Olist
+
 Neste desafio, trabalhei com os dados da Olist, um e-commerce brasileiro, para praticar SQL e explorar informações sobre vendas, clientes, produtos, pagamentos e entregas.
 
 ## Arquivos
